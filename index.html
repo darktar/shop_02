@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Run&Shine - Tu tienda de ropa deportiva</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald">
+
+    <script>
+  
+
+
+      function filterCategory(category) {
+          const products = document.querySelectorAll('.producto');
+          products.forEach(product => {
+              console.log(products);
+              if (category === 'all' || product.classList.contains(category)) {
+                  product.classList.remove('hidden');
+              } else {
+                  product.classList.add('hidden');
+              }
+          });
+      }
+
+      let contadorCarrito = 0;
+      let totalCarrito = 0;
+
+
+      function vaciarCarrito() {
+          // Vaciar lista del carrito
+          const carritoLista = document.getElementById('carrito-lista');
+          carritoLista.innerHTML = '';
+
+          // Restablecer contador y total
+          contadorCarrito = 0;
+          totalCarrito = 0;
+          document.getElementById('carrito-count').textContent = contadorCarrito;
+          document.getElementById('carrito-total').textContent = totalCarrito.toLocaleString();
+
+          // Habilitar todos los botones de agregar al carrito
+          const botonesAgregar = document.querySelectorAll('.btn-disabled');
+          botonesAgregar.forEach(boton => {
+              boton.classList.remove('btn-disabled');
+              boton.classList.add('btn-add-carrito');
+              boton.textContent = 'Agregar al Carrito';
+              boton.disabled = false;
+          });
+      }
+
+
+
+      function comprarCarrito() {
+ 
+        const popup = document.getElementById('popup-compra');
+        const progressFill = popup.querySelector('.progress-fill');
+        const popupMessage = document.getElementById('popup-message');
+        popup.classList.remove('hidden');
+        popup.style.display = 'block';
+
+ 
+        let progress = 0;
+        progressFill.style.width = '0%';
+        popupMessage.classList.add('hidden');
+
+        const interval = setInterval(() => {
+            progress += 5;
+            progressFill.style.width = `${progress}%`;
+
+            if (progress >= 100) {
+                clearInterval(interval);
+                popupMessage.classList.remove('hidden'); // Mostrar mensaje
+                setTimeout(() => {
+                    popup.style.display = 'none'; // Ocultar popup tras un segundo
+                    vaciarCarrito();
+                }, 1000);
+            }
+        }, 100);
+    }
+
+
+
+      function agregarCarrito(event) {
+          const producto = event.target.closest('.producto');
+          const nombre = producto.querySelector('h3').textContent;
+          const precioTexto = producto.querySelector('.precio-actual').textContent.replace('$', '').replace('.', '');
+          const precio = parseFloat(precioTexto);
+
+          // Actualizar contador
+          contadorCarrito++;
+          document.getElementById('carrito-count').textContent = contadorCarrito;
+
+          // Agregar producto al carrito
+          const carritoLista = document.getElementById('carrito-lista');
+          const item = document.createElement('li');
+          item.textContent = `${nombre} - $${precio.toLocaleString()}`;
+          carritoLista.appendChild(item);
+
+          // Actualizar total
+          totalCarrito += precio;
+          document.getElementById('carrito-total').textContent = totalCarrito.toLocaleString();
+
+
+          const boton = event.target;
+          boton.classList.remove('btn-add-carrito');
+          boton.classList.add('btn-disabled');
+          boton.textContent = 'Agregado';
+          boton.disabled = true;
+      }
+
+  </script>
+
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" alt="Logo de Run&Shine">
+            </div>
+            <div class="titulo">
+                <h1>Run&Shine</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Inicio</a></li>
+                    <li><a href="#ofertas">Ofertas</a></li>
+                    <li><a href="#">Market</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </nav>
+        
+            <div class="carrito-container">
+              <div class="carrito-icon">
+                  🛒 <span id="carrito-count">0</span>
+              </div>
+              <div id="carrito-detalle" class="carrito-detalle">
+                  <h3>Carrito</h3>
+                  <ul id="carrito-lista"></ul>
+                  <p><strong>Total:</strong> $<span id="carrito-total">0</span></p>
+                  <div id="carrito-controles">
+                    <button id="btn-comprar" onclick="comprarCarrito()">Comprar</button>
+                    <button id="btn-vaciar" onclick="vaciarCarrito()">Vaciar</button>
+                </div>
+
+               </div>
+
+          </div>
+
+          </div>
+
+    </header>
+
+    <main>
+
+ <section class="categorias">
+        <h2>Categorías</h2>
+        <ul>
+            <li><a href="#" onclick="filterCategory('all')">Todos</a></li>
+            <li><a href="#" onclick="filterCategory('running')">Running</a></li>
+            <li><a href="#" onclick="filterCategory('hombres')">Hombres</a></li>
+            <li><a href="#" onclick="filterCategory('mujeres')">Mujeres</a></li>
+        </ul>
+    </section>
+
+    <section id="ofertas" class="ofertas">
+        <h2>Ofertas</h2>
+        <div class="productos">
+            <!-- Productos -->
+            <div class="producto hombres">
+                <img src="imgs/remera_hombre_01.png" alt="Remera Hombre 01">
+                <h3>Remera Hombre 01</h3>
+                <p>
+                    <span class="precio-anterior">$25.000</span>
+                    <span class="precio-actual">$20.000</span>
+                </p>
+                <button class="btn-add-carrito" onclick="agregarCarrito(event)">Agregar al Carrito</button>
+            </div>
+            <div class="producto hombres">
+                <img src="imgs/remera_hombre_02.png" alt="Remera Hombre 02">
+                <h3>Remera Hombre 02</h3>
+                <p>
+                    <span class="precio-anterior">$24.000</span>
+                    <span class="precio-actual">$19.000</span>
+                </p>
+                <button class="btn-add-carrito" onclick="agregarCarrito(event)">Agregar al Carrito</button>
+            </div>
+            <div class="producto mujeres">
+                <img src="imgs/remera_mujer_02.png" alt="Remera Mujer 02">
+                <h3>Remera Mujer 02</h3>
+                <p>
+                    <span class="precio-anterior">$22.000</span>
+                    <span class="precio-actual">$18.000</span>
+                </p>
+                <button class="btn-add-carrito" onclick="agregarCarrito(event)">Agregar al Carrito</button>
+            </div>
+            <div class="producto running">
+                <img src="imgs/zapatillas_02.png" alt="Zapatillas 02">
+                <h3>Zapatillas 02</h3>
+                <p>
+                    <span class="precio-anterior">$85.000</span>
+                    <span class="precio-actual">$78.000</span>
+                </p>
+                <button class="btn-add-carrito" onclick="agregarCarrito(event)">Agregar al Carrito</button>
+            </div>
+            <div class="producto hombres">
+                <img src="imgs/remera_hombre_03.png" alt="Remera Hombre 03">
+                <h3>Remera Hombre 03</h3>
+                <p>
+                    <span class="precio-anterior">$23.000</span>
+                    <span class="precio-actual">$19.500</span>
+                </p>
+                <button class="btn-add-carrito" onclick="agregarCarrito(event)">Agregar al Carrito</button>
+            </div>
+            <div class="producto running">
+                <img src="imgs/zapatillas_03.png" alt="Zapatillas 03">
+                <h3>Zapatillas 03</h3>
+                <p>
+                    <span class="precio-anterior">$90.000</span>
+                    <span class="precio-actual">$82.000</span>
+                </p>
+                <button class="btn-add-carrito" onclick="agregarCarrito(event)">Agregar al Carrito</button>
+            </div>
+            <div class="producto mujeres">
+                <img src="imgs/remera_mujer_03.png" alt="Remera Mujer 03">
+                <h3>Remera Mujer 03</h3>
+                <p>
+                    <span class="precio-anterior">$21.000</span>
+                    <span class="precio-actual">$17.000</span>
+                </p>
+                <button class="btn-add-carrito" onclick="agregarCarrito(event)">Agregar al Carrito</button>
+            </div>
+            <div class="producto running">
+                <img src="imgs/zapatillas_05.png" alt="Zapatillas 05">
+                <h3>Zapatillas 05</h3>
+                <p>
+                    <span class="precio-anterior">$88.000</span>
+                    <span class="precio-actual">$80.000</span>
+                </p>
+                <button class="btn-add-carrito" onclick="agregarCarrito(event)">Agregar al Carrito</button>
+            </div>
+            <div class="producto mujeres">
+                <img src="imgs/remera_mujer_05.png" alt="Remera Mujer 05">
+                <h3>Remera Mujer 05</h3>
+                <p>
+                    <span class="precio-anterior">$23.000</span>
+                    <span class="precio-actual">$19.000</span>
+                </p>
+                <button class="btn-add-carrito" onclick="agregarCarrito(event)">Agregar al Carrito</button>
+            </div>
+            <!-- Agrega el resto de los productos con las clases adecuadas -->
+            <!-- Más productos -->
+            <!-- Ejemplo de un nuevo producto -->
+            <div class="producto hombres">
+                <img src="imgs/remera_hombre_04.png" alt="Remera Hombre 04">
+                <h3>Remera Hombre 04</h3>
+                <p>
+                    <span class="precio-anterior">$26.000</span>
+                    <span class="precio-actual">$22.000</span>
+                </p>
+                <button class="btn-add-carrito" onclick="agregarCarrito(event)">Agregar al Carrito</button>
+            </div>
+            <!-- Y así sucesivamente -->
+        </div>
+    </section>
+
+
+
+          <section class="comentarios">
+            <h2>Comentarios de Nuestros Clientes</h2>
+            <div class="comentarios-container">
+                <div class="comentario">
+                    <img src="imgs/zapatillas_02.png" alt="Zapatillas 02">
+                    <div class="comentario-texto">
+                        <strong>Marta:</strong>
+                        <p>¡Compré las zapatillas y me llegaron súper rápido!</p>
+                    </div>
+                </div>
+                <div class="comentario">
+                    <img src="imgs/remera_hombre_05.png" alt="Remera Mujer 02">
+                    <div class="comentario-texto">
+                        <strong>Juan:</strong>
+                        <p>La remera es cómoda y de excelente calidad.</p>
+                    </div>
+                </div>
+                <div class="comentario">
+                    <img src="imgs/remera_hombre_03.png" alt="Remera Hombre 03">
+                    <div class="comentario-texto">
+                        <strong>Sofía:</strong>
+                        <p>¡Me encantó la remera! La volveré a comprar.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="Mapa">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d26307.00233386545!2d-58.697852612703066!3d-34.493368785393685!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcbbcde44e14db%3A0x73a32e1a5461849!2sSportClub%20Hind%C3%BA!5e0!3m2!1ses!2sar!4v1735607863686!5m2!1ses!2sar" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </section>
+
+        <section id="contacto" class="contacto">
+          <p>Ponte en contacto con nosotros:</p>
+          <form action="https://formspree.io/f/xovqerpd" method="POST">
+            <label>
+              correo:
+              <input type="email" name="email">
+            </label>
+            <label>
+              Mensaje:
+              <textarea name="message"></textarea>
+            </label>
+            <button type="submit">Enviar</button>
+          </form>  
+        
+        </section>
+
+
+    </main>
+    
+    <footer>
+        <p>&copy; 2024 Run&Shine. Todos los derechos reservados.</p>
+    </footer>
+
+
+    <div id="popup-compra" class="popup hidden">
+      <div class="popup-content">
+          <h3>Procesando compra...</h3>
+          <div class="progress-bar">
+              <div class="progress-fill"></div>
+          </div>
+          <p id="popup-message" class="hidden">¡Compra realizada!</p>
+      </div>
+  </div>
+
+
+</body>
+</html>
